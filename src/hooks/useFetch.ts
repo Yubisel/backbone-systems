@@ -48,6 +48,7 @@ function useFetch<Type>(url, header: HeaderType = defaultHeader): FetchType {
   };
   useEffect(() => {
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return {isLoading, isError, data};
 };
