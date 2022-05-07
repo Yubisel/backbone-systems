@@ -31,7 +31,6 @@ function useFetch<Type>(url, header: HeaderType = defaultHeader): FetchType {
     } catch (error) {
       setIsLoading(false);
       setIsError(true);
-      console.log(error);
     }
   }, [url, header]);
   useEffect(() => {

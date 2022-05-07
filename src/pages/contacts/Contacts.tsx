@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, ChangeEvent } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -18,6 +18,10 @@ import Grid from "@mui/material/Grid";
 import AlertTitle from '@mui/material/AlertTitle';
 import Button from "@mui/material/Button";
 import AddIcon from '@mui/icons-material/Add';
+import CancelIcon from '@mui/icons-material/Cancel';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 
 type ResultsType = {
   count: number,
@@ -29,9 +33,13 @@ type ResultsType = {
 
 export default function Contacts() {
   const [page, setPage] = React.useState(1);
+  const [idToDelete, setIdToDelete] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [data, setData] = useState<ResultsType>();
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const [isDeleteSuccess, setIsDeleteSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const fetchData = useCallback(async () => {
     try {
@@ -42,17 +50,54 @@ export default function Contacts() {
     } catch (error) {
       setIsLoading(false);
       setIsError(true);
-      console.log(error);
     }
   }, [page]);
-    useEffect(() => {
-      fetchData()
-    }, [fetchData]);
+  useEffect(() => {
+    fetchData()
+  }, [fetchData, isDeleteSuccess]);
 
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handleChange = (event: ChangeEvent<unknown>, value: number) => {
     setIsLoading(true);
     setPage(value);
+    setIsDeleteSuccess(false);
   };
+
+
+  const handleOpenDeleteModal = (id: string) => {
+    setIdToDelete(id);
+    setIsModalOpen(true);
+  }
+  const handleDelete = async () => {
+    setIsLoading(true);
+    setIsError(false);
+    setIsDeleteSuccess(false);
+    try {
+      const response = await fetch(`${APP_CONFIG.API_URL}/contacts/${idToDelete}`, {
+        method: "DELETE",
+        headers: new Headers({ 'content-type': 'application/json' })
+      });
+      const data = await response.json();
+      if (response.status === 200) {
+        setIsError(false);
+        setIsDeleteSuccess(true);
+        setErrorMessage("");
+      } else {
+        setIsError(true);
+        setIsDeleteSuccess(false);
+        setErrorMessage(data.message);
+      }
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      setIsError(true);
+    }
+    setIdToDelete("");
+    setIsModalOpen(false);
+  }
+  const handleCloseModal = () => {
+    setIdToDelete("");
+    setIsModalOpen(false);
+  }
 
   return (
     <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', paddingBottom: 5 }}>
@@ -67,6 +112,7 @@ export default function Contacts() {
         </Grid>
       </Grid>
 
+
       {isLoading &&
         <Grid container spacing={2}>
           <Grid item xs={12} textAlign={"center"}>
@@ -78,7 +124,14 @@ export default function Contacts() {
       {isError &&
         <Alert severity="error">
           <AlertTitle>Error</AlertTitle>
-          There was an error
+          {errorMessage || "There was an error"}
+        </Alert>
+      }
+
+      {isDeleteSuccess &&
+        <Alert severity="success">
+          <AlertTitle>Error</AlertTitle>
+          {"The contact was deleted."}
         </Alert>
       }
 
@@ -101,7 +154,6 @@ export default function Contacts() {
                   <TableCell>{row.lastName}</TableCell>
                   <TableCell>{row.email}</TableCell>
                   <TableCell>{row.phone}</TableCell>
-                  {/* <TableCell align="right">{`$${row.phone}`}</TableCell> */}
                   <TableCell>
                     <Button component={Link} to={`/contacts/edit/${row._id}`} size="small">
                       <EditIcon />
@@ -109,7 +161,7 @@ export default function Contacts() {
                     <Button component={Link} to={`/contacts/details/${row._id}`} size="small">
                       <RemoveRedEyeIcon />
                     </Button>
-                    <Button component={Link} to={"/"} size="small">
+                    <Button onClick={() => handleOpenDeleteModal(row._id)} size="small">
                       <DeleteIcon />
                     </Button>
                   </TableCell>
@@ -122,6 +174,40 @@ export default function Contacts() {
           </Grid>
         </>
       }
+      <Modal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={{
+          position: 'absolute' as 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          bgcolor: 'background.paper',
+          border: '2px solid #000',
+          boxShadow: 24,
+          p: 4,
+        }}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Delete
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Are you sure you want to delete the contact?
+          </Typography>
+
+        <Grid item xs={12} textAlign={"center"} marginTop={3}>
+          <Button onClick={handleDelete}>
+            <DeleteIcon /> Delete
+          </Button>
+          <Button onClick={handleCloseModal}>
+            <CancelIcon /> Cancel
+          </Button>
+        </Grid>
+        </Box>
+      </Modal>
     </Paper>
   );
 }

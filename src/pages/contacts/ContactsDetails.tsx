@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useParams, Link } from "react-router-dom";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -26,7 +26,7 @@ type ResultsType = {
   updatedAt: string,
 }
 
-export default function ContactsDetails() {
+export default function ContactDetails() {
   let params = useParams();
   const { isLoading, isError, data } = useFetch<ResultsType>(`${APP_CONFIG.API_URL}/contacts/${params.id}`);
 
