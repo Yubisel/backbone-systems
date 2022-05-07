@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface FetchType {
   isLoading: boolean,
@@ -22,21 +22,22 @@ function useFetch<Type>(url, header: HeaderType = defaultHeader): FetchType {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(url, { ...defaultHeader, ...header });
-        const data = await response.json();
-        setIsLoading(false);
-        setData(data);
-      } catch (error) {
-        setIsLoading(false);
-        setIsError(true);
-        console.log(error);
-      }
-    };
-    fetchData();
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await fetch(url, { ...defaultHeader, ...header });
+      const data = await response.json();
+      setIsLoading(false);
+      setData(data);
+    } catch (error) {
+      setIsLoading(false);
+      setIsError(true);
+      console.log(error);
+    }
   }, [url, header]);
+  useEffect(() => {
+    fetchData()
+  }, [fetchData]);
+
   return { isLoading, isError, data };
 };
 

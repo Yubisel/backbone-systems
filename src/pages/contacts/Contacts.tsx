@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -33,7 +33,7 @@ export default function Contacts() {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const response = await fetch(`${APP_CONFIG.API_URL}/contacts?perPage=10&page=${page}`);
       const data = await response.json();
@@ -44,10 +44,10 @@ export default function Contacts() {
       setIsError(true);
       console.log(error);
     }
-  };
-  useEffect(() => {
-    fetchData();
   }, [page]);
+    useEffect(() => {
+      fetchData()
+    }, [fetchData]);
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setIsLoading(true);
