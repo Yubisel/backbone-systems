@@ -1,10 +1,17 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './config/theme';
+import Layout from './pages/Layout';
 
 function App() {
-    return <Button variant="contained">Hello World</Button>;
+  return (
+    <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Layout />
+    </ThemeProvider>
+  );
 }
 
 export default App;
