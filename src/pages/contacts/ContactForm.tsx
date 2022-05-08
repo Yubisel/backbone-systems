@@ -32,6 +32,12 @@ export default function ContactForm({
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
       email
     );
+  
+  const isValidPhone = phone => {
+    // eslint-disable-next-line no-useless-escape
+      const regex = /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/i;
+      return regex.test(phone);
+    }
 
   return (
     <form onSubmit={handleSubmit(handleOnSubmit)}>
@@ -127,7 +133,11 @@ export default function ContactForm({
                 fullWidth
                 variant="standard"
                 InputLabelProps={{ shrink: true }}
-                {...register("phone", { required: "This is required." })}
+                {...register("phone", {
+                  required: "This is required.", validate: phone => {
+                    const isValid = isValidPhone(phone);
+                    return isValid || "Enter a valid phone.";
+                  } })}
                 helperText={errors?.phone?.message}
               />
             </Grid>
