@@ -1,4 +1,3 @@
-import React from 'react';
 import { useParams, Link } from "react-router-dom";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
