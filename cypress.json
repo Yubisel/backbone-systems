@@ -1,0 +1,13 @@
+{
+    "baseUrl": "http://localhost:3000",
+    "video": true,
+    "viewportWidth": 1920,
+    "viewportHeight": 1080,
+    "defaultCommandTimeout": 12000,
+    "firefoxGcInterval": { "runMode": 1, "openMode": 1 },
+    "ignoreTestFiles": [],
+    "retries": {
+      "runMode": 2,
+      "openMode": 0
+    }
+}

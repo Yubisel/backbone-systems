@@ -41,10 +41,10 @@ export default function ContactForm({
             <Title>{headerText}</Title>
           </Grid>
           <Grid item xs={2} textAlign={"right"}>
-            <Button type='submit'>
+            <Button type='submit' data-cy={"button-save"}>
               <SaveIcon /> Save
             </Button>
-            <Button component={Link} to={"/contacts"}>
+            <Button component={Link} to={"/contacts"} data-cy={"button-cancel"}>
               <CancelIcon /> Cancel
             </Button>
           </Grid>
@@ -62,7 +62,7 @@ export default function ContactForm({
           <Grid item xs={12} marginBottom={3}>
             <Alert severity="success">
               <AlertTitle>Success</AlertTitle>
-              The contact was saved!!!
+              The contact was saved.
             </Alert>
           </Grid>
         }
@@ -82,6 +82,7 @@ export default function ContactForm({
               <TextField
                 error={!!errors?.firstName?.message}
                 label="First name"
+                data-cy={"field-firstName"}
                 fullWidth
                 variant="standard"
                 InputLabelProps={{ shrink: true }}
@@ -93,6 +94,7 @@ export default function ContactForm({
               <TextField
                 error={!!errors?.lastName?.message}
                 label="Last name"
+                data-cy={"field-lastName"}
                 fullWidth
                 variant="standard"
                 InputLabelProps={{ shrink: true }}
@@ -104,6 +106,7 @@ export default function ContactForm({
               <TextField
                 error={!!errors?.email?.message}
                 label="Email"
+                data-cy={"field-email"}
                 fullWidth
                 variant="standard"
                 InputLabelProps={{ shrink: true }}
@@ -120,6 +123,7 @@ export default function ContactForm({
               <TextField
                 error={!!errors?.phone?.message}
                 label="Phone"
+                data-cy={"field-phone"}
                 fullWidth
                 variant="standard"
                 InputLabelProps={{ shrink: true }}

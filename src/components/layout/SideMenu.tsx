@@ -16,7 +16,7 @@ const SideMenu = () => {
         </ListItemIcon>
         <ListItemText primary="Home" />
       </ListItemButton>
-      <ListItemButton component={Link} to={"/contacts"}>
+      <ListItemButton component={Link} to={"/contacts"} data-cy="menu-contacts">
         <ListItemIcon>
           <ContactPageIcon />
         </ListItemIcon>

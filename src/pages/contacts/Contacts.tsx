@@ -106,7 +106,7 @@ export default function Contacts() {
           <Title>Contacts list</Title>
         </Grid>
         <Grid item xs={2} textAlign={"right"}>
-          <Button component={Link} to={"/contacts/create"}>
+          <Button component={Link} to={"/contacts/create"} data-cy={"create-contact"}>
             <AddIcon /> Create
           </Button>
         </Grid>
@@ -137,7 +137,7 @@ export default function Contacts() {
 
       {!isLoading && !isError && data &&
         <>
-          <Table>
+          <Table data-cy={"contacts-table"}>
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
