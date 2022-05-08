@@ -15,6 +15,7 @@ export function RouteConfig() {
       <Route path="/contacts/create" element={<ContactCreate />} />
       <Route path="/contacts/edit/:id" element={<ContactEdit />} />
       <Route path="/" element={<Home />} />
+      <Route path="*" element={<Home />} />
     </Routes>
   );
 };
